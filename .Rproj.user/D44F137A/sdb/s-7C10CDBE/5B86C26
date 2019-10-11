@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "\\name{simConf}\n\\alias{simConf}\n%- Also NEED an '\\alias' for EACH other topic documented here.\n\\title{\nSimulates data with confounders\n}\n\\description{\nGenerates user specified confounded data to conduct simulation studies for causal inference methods\n}\n\\usage{\nsimConf(n, nconf, dconf = c(\"beta\", 2, 2),\n           nexpred, dexpred = c(\"beta\", 2, 2),\n           noutpred, doutpred = c(\"beta\", 2, 2),\n           effect = log(2), escale = \"OR\", brate, erate)\n}\n%- maybe also 'usage' for other objects documented here.\n\\arguments{\n  \\item{n}{Sample size}\n  \\item{nconf}{Number of confounders}\n  \\item{dconf}{Distribution of confounders}\n  \\item{nexpred}{Number of exposure predictors}\n  \\item{dexpred}{Distribution of exposure predictors}\n  \\item{noutpred}{Number of outcome predictors}\n  \\item{doutpred}{Distribution of outcome predictors}\n  \\item{effect}{Treatment effect}\n  \\item{escale}{Scale of treatment effect. Default is odds ratio.}\n  \\item{brate}{Outcome background rate}\n  \\item{erate}{Exposure rate}\n}\n\n\\value{\nA simulated dataset is returned\n}\n\\author{\nJaejoon Song, Tae Hyun Jung\n}\n\n\\examples{\n# Load package\nlibrary(propensity)\n\n# Simulating data with 20 confounders with sample size of 1000\ngenData <- simConf(n = 1000,nconf = 30,dconf = c('beta',2,2),\n                   nexpred = 5, dexpred = c('beta',2,2),\n                   noutpred = 5, doutpred = c('beta',2,2),\n                   effect = 2, escale = 'OR',\n                   brate = .1,erate =.1)\n\n# Performing propensity score adjustment\nadj <- psAdj(data=genData)\n\n# Diagnostic plots\ndPlot(adjResults=adj)\n}\n",
+    "created" : 1570732491129.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "350763612",
+    "id" : "5B86C26",
+    "lastKnownWriteTime" : 1570789989,
+    "last_content_update" : 1570789989580,
+    "path" : "Z:/My documents/1packages/propensity/man/simConf.Rd",
+    "project_path" : "man/simConf.Rd",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_doc"
+}

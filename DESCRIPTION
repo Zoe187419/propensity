@@ -1,0 +1,21 @@
+Package: propensity
+Type: Package
+Title: Generating Data for Evaluating Performance of Propensity Score Methods
+Version: 0.1.3
+Author: Jaejoon Song, Tae Hyun Jung, Hana Lee
+Maintainer: Jaejoon Song <jaejoon.song@fda.hhs.gov>
+Description: Facilitates simulation studies for evaluating performance of propensity score methods.
+Depends:
+    R (>= 2.10),
+    stats
+Imports:
+    survey,
+    tableone,
+    Matching,
+    ggplot2,
+    ggpubr,
+    plyr
+License: GPL (>=2)
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.1.1

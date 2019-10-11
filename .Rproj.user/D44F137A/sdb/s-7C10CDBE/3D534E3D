@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "\\name{psAdj}\n\\alias{psAdj}\n\n\\title{\nPropensity Score Adjustment\n}\n\\description{\nPerforms propensity score adjustment\n}\n\\usage{\npsAdj(data,methods='all')\n}\n%- maybe also 'usage' for other objects documented here.\n\\arguments{\n  \\item{data}{}\n    \\item{methods}{}\n}\n\\value{\n \\item{SMD}{Standardized mean difference}\n \\item{propensity.score}{Propensity score}\n}\n\\author{\nJaejoon Song, Tae Hyun Jung\n}\n\\examples{\n# Load package\nlibrary(propensity)\n\n# Simulating data with 20 confounders with sample size of 1000\ngenData <- simConf(n = 1000,nconf = 30,dconf = c('beta',2,2),\n                   nexpred = 5, dexpred = c('beta',2,2),\n                   noutpred = 5, doutpred = c('beta',2,2),\n                   effect = 2, escale = 'OR',\n                   brate = .1,erate =.1)\n\n# Performing propensity score adjustment\nadj <- psAdj(data=genData)\n\n# Diagnostic plots\ndPlot(adjResults=adj)\n}\n",
+    "created" : 1570789008107.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3174964065",
+    "id" : "3D534E3D",
+    "lastKnownWriteTime" : 1570790094,
+    "last_content_update" : 1570790094469,
+    "path" : "Z:/My documents/1packages/propensity/man/psAdj.Rd",
+    "project_path" : "man/psAdj.Rd",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 7,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_doc"
+}

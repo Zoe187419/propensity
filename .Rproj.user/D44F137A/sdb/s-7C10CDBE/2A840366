@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "\n\nlibrary(devtools)\ninstall_github(\"github-js/acc\")\n\nbit64\nblob\n\n# pushing\nhttp://kbroman.org/pkg_primer/pages/github.html\n\n# installing \nhttps://cran.r-project.org/web/packages/githubinstall/vignettes/githubinstall.html",
+    "created" : 1570789872708.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "4005072624",
+    "id" : "2A840366",
+    "lastKnownWriteTime" : 1516217089,
+    "last_content_update" : 1516217089,
+    "path" : "Z:/My documents/1packages/ess package development/github related/installing package from github.R",
+    "project_path" : null,
+    "properties" : {
+    },
+    "relative_order" : 8,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

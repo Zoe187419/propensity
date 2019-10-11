@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "#' @export\n#' @importFrom ggplot2 ggplot\n#' @importFrom ggpubr ggarrange\n#' @importFrom plyr revalue\n\n\ndPlot <- function(adjResults){\n\n  #\n  ## Plot\n  library(ggplot2)\n\n  # adjResults <- adj\n  # adj$SMD\n\n  fig = ggplot(data =  adjResults$SMD, mapping = aes(x = Variable, y = SMD, group = Method,color=Method, linetype = Method)) +\n    geom_line() +\n    geom_point() +\n    geom_hline(yintercept = 0.1, size = 1,col=\"black\",linetype=2) +\n    coord_flip() +\n    theme_bw() + theme(legend.key = element_blank()) + labs(y=\"Standardized Mean Difference\")\n  fig = fig +  facet_wrap(vars(Method))\n\n  library(ggpubr)\n  library(plyr)\n\n  adjResults$data$exposure <- as.factor(adjResults$data$exposure)\n  adjResults$data$exposure <- revalue(adjResults$data$exposure, c(\"1\"=\"Exposed\", \"0\"=\"Unexposed\"))\n\n  p1<-ggplot(adjResults$data, aes(x=ps, fill=as.factor(exposure))) +\n    geom_density(alpha=0.4)+theme(legend.position=\"none\") +\n    scale_y_continuous(limits = c(0,6)) + ggtitle(\"Propensity Score (Unmatched Sample)\")+ theme(plot.title = element_text(hjust = 0.5)) +\n    xlab(\"Propensity Score\") + ylab(\"Density\")\n\n  p2<-ggplot(adjResults$matched.data, aes(x=ps, fill=as.factor(exposure))) +\n    geom_density(alpha=0.4)+ scale_y_continuous(limits = c(0,6))  +\n    ggtitle(\"Propensity Score (Unmatched Sample)\") + theme(plot.title = element_text(hjust = 0.5)) +\n    xlab(\"Propensity Score\") + ylab(\"Density\")+ scale_fill_discrete(name = \"Exposure\")\n\n  ggarrange(fig, p1, p2, nrow = 1)\n\n}\n\n\n\n",
+    "created" : 1570788855979.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "12683249",
+    "id" : "9BF014EE",
+    "lastKnownWriteTime" : 1570788997,
+    "last_content_update" : 1570788997423,
+    "path" : "Z:/My documents/1packages/propensity/R/dPlot.R",
+    "project_path" : "R/dPlot.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 6,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

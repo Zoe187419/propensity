@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "#' @export\n#' @importFrom survey svydesign\n#' @importFrom tableone CreateTableOne ExtractSmd\n#' @importFrom Matching Match\n\npsAdj <- function(data,methods='all'){\n\n  adjResults <- list()\n  # genData <- data\n  library(\"survey\")\n  library(\"tableone\")\n  library (\"Matching\")\n  cNames <- colnames(genData)[-c(1:4)]\n  pFormula <- paste(cNames,collapse=\" + \")\n  pFormula <- as.formula(paste(\"exposure\",\" ~ \",pFormula,sep=\"\"))\n  ps <- glm(pFormula, data=genData, family=\"binomial\")\n  genData$ps  = fitted(ps) ## V1-v25 were used for PS model ##\n  genData$w.att<-ifelse(genData$exposure==1,1,genData$ps/(1-genData$ps));range(genData$w.att)  ## ATT weights in full data ##\n\n  adjResults$propensity.score <- genData$ps\n\n  ##### PS matching #####\n  rr2 <- Match(Y=genData$obs.outcome,Tr=genData$exposure,X=genData$ps,M=1,replace=F,caliper=0.2); ## Match on PS score with 1:1 ratio\n  matched.treated = unique(genData[rr2$index.treated,])\n  matched.treated$Id = 1:length(matched.treated$ps)\n  matched.untreated = genData[rr2$index.control,]\n  matched.untreated$Id = rep(1:length(matched.treated$ps),each = 1) ## Ratio is 1:1\n  matched_genDataa <- rbind(matched.treated,matched.untreated) ## Matched genDataaset\n\n\n  ### precedent step for svyglm: combines a genDataa frame and all the survey design information ###\n  design.att <- svydesign(ids=~1,weights= ~w.att,data=genData)\n  #design.att2 <- svydesign(ids=~1,weights= ~w.att,data=genDataatt)\n\n  vars <- colnames(genData)[5:ncol(genData)]\n  tabraw <- CreateTableOne(vars = vars, strata = \"exposure\", data = genData, test = TRUE)\n  smd.unadj = ExtractSmd(tabraw)\n\n  tabweighted <- svyCreateTableOne(vars = vars, strata = \"exposure\", data = design.att, test = TRUE);\n  smd.weighted = ExtractSmd(tabweighted)\n\n  tabMatched <- CreateTableOne(vars = vars, strata = \"exposure\", data = matched_genDataa, test = TRUE)\n  smd.matched = ExtractSmd(tabMatched)\n\n  ## main analysis ###\n  model0 <- glm(obs.outcome ~ exposure, family = \"binomial\", data=genData) ## Unadjusted\n  model1 <- glm(obs.outcome ~ exposure, family = \"quasibinomial\", weights = w.att, data=genData)\n  #model2 <- glm(obs.outcome ~ exposure + x1 + x2+ x3+ x4+x5+x6+x7+ x8+ x9+ x10 +x11+x12+x13+x14+x15+x16+x17+x18+x19+x20, family = \"binomial\", data=genData)\n  model3 <- glm(obs.outcome ~ exposure, family = \"binomial\", data=matched_genDataa)\n\n  # summary(model3)\n  # round((summary(model3)$coef)[2,],5)\n\n  naive = (summary(model0)$coef)[2,]\n  IPW = (summary(model1)$coef)[2,]\n  #est3 = (summary(model2)$coef)[2,]\n  Matched = (summary(model3)$coef)[2,]\n\n  smd.all = cbind(smd.unadj,smd.weighted,smd.matched,0)\n  estimates <- rbind(naive,IPW,Matched)\n\n  adjResults$estimates <- estimates\n\n  unadj <-  data.frame(SMD = as.numeric(smd.unadj[(1:(dim(smd.unadj)[1]-2))]), Variable = rownames(smd.unadj)[1:(dim(smd.unadj)[1]-2)], Method = 'Unadjusted')\n  weighted <- data.frame(SMD = as.numeric(smd.weighted[1:(dim(smd.weighted)[1]-2)]), Variable = rownames(smd.weighted)[1:(dim(smd.weighted)[1]-2)], Method = 'Weighted')\n  matched <- data.frame(SMD = as.numeric(smd.matched[1:(dim(smd.matched)[1]-2)]), Variable = rownames(smd.matched)[1:(dim(smd.matched)[1]-2)], Method = 'Matched')\n  smds <- rbind(unadj,weighted,matched)\n\n  adjResults$SMD <- smds\n  adjResults$data <- genData\n  adjResults$matched.data <- matched_genDataa\n  adjResults\n}\n",
+    "created" : 1570788814294.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1679933712",
+    "id" : "F1A972F0",
+    "lastKnownWriteTime" : 1570790055,
+    "last_content_update" : 1570790055195,
+    "path" : "Z:/My documents/1packages/propensity/R/psAdj.R",
+    "project_path" : "R/psAdj.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 5,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

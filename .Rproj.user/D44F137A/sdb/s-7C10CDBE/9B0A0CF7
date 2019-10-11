@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "#' @export\n#' @importFrom stats rbinom runif\n\nsimConf <- function(n,nconf,dconf = c('beta',2,2),\n                    nexpred, dexpred = c('beta',2,2),\n                    noutpred, doutpred = c('beta',2,2),\n                    effect = 2, escale = 'OR',\n                    brate,erate){\n  set.seed(12345)\n  # Define random variable generators\n  ncov <- nconf + nexpred + noutpred\n  genConf <- paste('r',dconf[1],\"(n,\",dconf[2],\",\",dconf[3],\")\",sep='')\n  genExPred <- paste('r',dexpred[1],\"(n,\",dexpred[2],\",\",dexpred[3],\")\",sep='')\n  genOutPred <- paste('r',doutpred[1],\"(n,\",doutpred[2],\",\",doutpred[3],\")\",sep='')\n\n  dataConf <- as.data.frame(replicate(nconf, eval(parse(text = genConf ))))\n  dataExPred <- as.data.frame(replicate(nexpred, eval(parse(text = genExPred ))))\n  dataOutPred <- as.data.frame(replicate(noutpred, eval(parse(text = genOutPred ))))\n\n  covData <- data.frame(dataConf,dataExPred,dataOutPred)\n  #X <- rbind(covData[c(1:(n/2)),]-0.5,covData[c(((n/2)+1):n),]+0.5);dim(X)\n  X <- covData\n  colnames(X) <- paste(\"x\", 1:ncov, sep = \"\")\n  #covCoef <- runif(ncov,-.5,.5)\n  #covCoef <- round(runif(ncov,.2,.7),2)*sample(c(-1,1),ncov,replace=T)\n  nconfpart <- round(nconf/5,0)\n  nconfremain <- nconf-nconfpart\n\n  covCoef <- c(round(runif(nconfpart,.6,.7),2),\n               round(runif(nconfremain,.1,.2),2)*sample(c(-1,1),nconfremain,replace=T),\n               round(runif(nexpred,.1,.2)*(-1),2),\n               round(runif(noutpred,.5,.6),2))\n  expredCols <- (nconf+1):(nconf+nexpred)\n  outpredCols <- (nconf+nexpred+1):(ncov)\n\n  ## Generate potential outcomes ##\n  Xout <- X[,-expredCols]\n  const.out <- log(brate/(1-brate))\n  #logOR1 <- const.out + as.numeric(effect)*1 + t(t(as.vector(covCoef[-expredCols])) %*% t(Xout)  )\n  logOR1 <- const.out + as.numeric(log(effect))*1 + t(t(as.vector(covCoef[-expredCols])) %*% t(Xout))\n  prob.logOR1 = exp(logOR1)/(1+exp(logOR1))\n  outcome1 = rbinom(n,1,prob.logOR1)\n  #prop.table(table(outcome1))\n\n  logOR0 = logOR1 - as.numeric(effect)*1\n  prob.logOR0 = exp(logOR0)/(1+exp(logOR0))\n  outcome0 = rbinom(n,1,prob.logOR0)\n  #prop.table(table(outcome0))\n\n\n  ## Generate treatment ##\n  Xtrt <- X[,-outpredCols]\n  const.ex <- log(erate/(1-erate))\n  logExp = const.ex + t(t(as.vector(covCoef[-outpredCols])) %*% t(Xtrt)  )\n  prob.logExp = exp(logExp)/(1+exp(logExp)) # probability to get exposed\n  exposure = rbinom(n,1,prob.logExp); ## Generate exposure\n\n  obs.outcome = exposure*outcome1 + (1-exposure)*outcome0\n\n  ## Generate data\n  dat = cbind(outcome1, outcome0, obs.outcome, exposure, X)\n  dat\n}\n",
+    "created" : 1570732444766.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "681923284",
+    "id" : "9B0A0CF7",
+    "lastKnownWriteTime" : 1570783166,
+    "last_content_update" : 1570783166674,
+    "path" : "Z:/My documents/1packages/propensity/R/simConf.R",
+    "project_path" : "R/simConf.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
